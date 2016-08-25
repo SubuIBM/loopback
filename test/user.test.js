@@ -1767,10 +1767,10 @@ describe('User', function() {
     it('allows resetPassword by email if email verification is required and done',
   function(done) {
     User.settings.emailVerificationRequired = true;
-    var email = 'foo1@bar.com';
+    var email = validCredentialsEmailVerified.email;
     var calledBack = false;
 
-    User.resetPassword({ email: 'foo1@bar.com' }, function() {
+    User.resetPassword({ email: email }, function() {
       calledBack = true;
     });
 
@@ -1785,9 +1785,9 @@ describe('User', function() {
     it('disallows resetPassword by email if email verification is required and not done',
   function(done) {
     User.settings.emailVerificationRequired = true;
-    var email = 'foo@bar.com';
+    var email = validCredentialsEmail;
 
-    User.resetPassword({ email: 'foo@bar.com' }, function(err) {
+    User.resetPassword({ email: email }, function(err) {
       assert(err);
       assert.equal(err.code, 'RESET_FAILED_EMAIL_NOT_VERIFIED');
       assert.equal(err.statusCode, 401);
@@ -1798,9 +1798,9 @@ describe('User', function() {
     it('allows resetPassword by email if email verification is not required',
   function(done) {
     User.settings.emailVerificationRequired = false;
-    var email = 'foo@bar.com';
+    var email = validCredentialsEmail;
 
-    User.resetPassword({ email: 'foo@bar.com' }, function(err) {
+    User.resetPassword({ email: email }, function(err) {
       User.once('resetPasswordRequest', function(info) {
         assert(info.email);
         assert(info.accessToken);

@@ -580,20 +580,20 @@ module.exports = function(User) {
         err = new Error(g.f('Email has not been verified'));
         err.statusCode = 401;
         err.code = 'RESET_FAILED_EMAIL_NOT_VERIFIED';
-        cb(err);
-      } else {
-        user.accessTokens.create({ ttl: ttl }, function(err, accessToken) {
-          if (err) {
-            return cb(err);
-          }
-          cb();
-          UserModel.emit('resetPasswordRequest', {
-            email: options.email,
-            accessToken: accessToken,
-            user: user,
-          });
-        });
+        return cb(err);
       }
+
+      user.accessTokens.create({ ttl: ttl }, function(err, accessToken) {
+        if (err) {
+          return cb(err);
+        }
+        cb();
+        UserModel.emit('resetPasswordRequest', {
+          email: options.email,
+          accessToken: accessToken,
+          user: user,
+        });
+      });
     });
 
     return cb.promise;
